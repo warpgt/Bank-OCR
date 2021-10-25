@@ -62,6 +62,10 @@ class AccountNumberFixTransformer implements AccountNumberFixTransformerInterfac
 
                 if (!isset($matches[0]) || 2 > count($matches[0])) {
                     $this->addWhenValid($number, $possibleValidNumbers);
+                }else{
+                    if (8 > $position) {
+                        $this->generate($position + 1, $number, $possibleValidNumbers);
+                    }
                 }
             }
         }

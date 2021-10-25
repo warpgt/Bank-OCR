@@ -17,7 +17,7 @@ use function strlen;
 use function trim;
 use function sprintf;
 
-class File
+class File implements ReaderInterface
 {
     private string $filePath;
 
@@ -38,7 +38,6 @@ class File
                     continue;
                 }
                 $accounts[$accountNumber][] = array_map('trim', str_split($line, 3));
-
             }
             fclose($handle);
         } else {
@@ -46,21 +45,23 @@ class File
         }
 
         $digit = [];
+        $index = 0;
         foreach ($accounts as $number => $lines) {
             foreach (range(0, 8) as $section) {
                 $numberPattern = $this->getNumberPattern($lines, $section);
 
-                if (!isset($digit[$number])) {
-                    $digit[$number] = [];
+                if (!isset($digit[$index])) {
+                    $digit[$index] = [];
                 }
 
                 $digitFound = DigitDecoder::decode($numberPattern);
                 if (InvalidDigit::CODE !== $digitFound) {
-                    $digit[$number][] = $digitFound;
+                    $digit[$index][] = $digitFound;
                     continue;
                 }
-                $digit[$number][] = DigitDecoder::getPossibleDigits($numberPattern);
+                $digit[$index][] = DigitDecoder::getPossibleDigits($numberPattern);
             }
+            $index++;
         }
 
         return $digit;

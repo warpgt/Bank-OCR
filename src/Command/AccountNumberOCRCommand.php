@@ -61,14 +61,11 @@ class AccountNumberOCRCommand extends Command
 
             $this->bus->dispatch($msg);
 
-            $output->writeln('User Story 1');
-            foreach ($msg->getAccountNumbers() as $accountNumber) {
-                $output->writeln(AccountNumberConverter::toString($accountNumber));
-            }
+            $this->userStoryFirst($msg, $output);
 
-            $badAccountList = $this->userStory23($msg, $output);
+            $badAccountList = $this->userStorySecondThird($msg, $output);
 
-            $this->userStory4($badAccountList, $output);
+            $this->userStoryFourth($badAccountList, $output);
 
         } catch (Throwable $e) {
             $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
@@ -77,7 +74,15 @@ class AccountNumberOCRCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function userStory23(FileReader $msg, OutputInterface $output): array
+    private function userStoryFirst(FileReader $msg, OutputInterface $output): void
+    {
+        $output->writeln('User Story 1');
+        foreach ($msg->getAccountNumbers() as $accountNumber) {
+            $output->writeln(AccountNumberConverter::toString($accountNumber));
+        }
+    }
+
+    private function userStorySecondThird(FileReader $msg, OutputInterface $output): array
     {
         $output->writeln('User Story 2 + 3');
         $badAccountList = [];
@@ -96,7 +101,7 @@ class AccountNumberOCRCommand extends Command
         return $badAccountList;
     }
 
-    private function userStory4(array $badAccountList, OutputInterface $output): void
+    private function userStoryFourth(array $badAccountList, OutputInterface $output): void
     {
         $output->writeln('User Story 4');
         /**
